@@ -31,7 +31,7 @@ You can add this container to your docker-compose setup like shown below.
 
 ```yaml
   cleanup:
-    image: zdfmfi.azurecr.io/gbas/cleanup-docker
+    image: cleanup-docker
     depends_on:
       ...
     volumes:
