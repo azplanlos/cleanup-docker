@@ -1,4 +1,4 @@
-# Cleanup your docker daemon periodically
+# Cleanup your docker daemon periodically (Windows version)
 
 ## Reason
 
@@ -27,26 +27,24 @@ Use this image only if you don't store any persistent data on docker volumes!**
 
 ## Usage
 
-```sh
-docker container run \
-    -d \
-    --restart unless-stopped \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    jaedle/cleanup-docker:latest
+You can add this container to your docker-compose setup like shown below.
+
+```yaml
+  cleanup:
+    image: zdfmfi.azurecr.io/gbas/cleanup-docker
+    depends_on:
+      ...
+    volumes:
+      - type: npipe
+        source: \\.\pipe\docker_engine
+        target: \\.\pipe\docker_engine
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 ```
 
 ## Parameters
 
 The interval of the cleanup (default 24 hours) can be configured through
 the environment variable CLEANUP_RATE specified in seconds.
-
-This will cleanup each hour:
-
-```sh
-docker container run \
-    -d \
-    --restart unless-stopped \
-    -e CLEANUP_RATE=3600 \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    jaedle/cleanup-docker:latest
-```
